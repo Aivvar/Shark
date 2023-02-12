@@ -1,6 +1,7 @@
 package com.degmagames.shark
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
@@ -30,12 +31,16 @@ import com.degmagames.shark.ui.theme.SharkTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+        actionBar?.hide()
         setContent {
             SharkTheme {
-                Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.SpaceBetween) {
-                    CreditCard()
-                    BuisnessList()
-                    ClickField()
+                Column(modifier = Modifier
+                    .fillMaxHeight()
+                    .background(MaterialTheme.colors.background), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    CreditCard(2f)
+                    BuisnessList(3f)
+                    ClickField(1.5f)
                 }
 
             }
@@ -44,50 +49,50 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@Preview(showBackground = true)
 @Composable
-fun CreditCard() {
+fun ColumnScope.CreditCard(weight: Float) {
     SharkTheme {
-        Box(modifier = Modifier.background(color = MaterialTheme.colors.background)) {
-            Image(
-                painter = painterResource(id = R.drawable.card),
-                "",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 40.dp),
-                contentScale = ContentScale.FillWidth
-            )
-           //Icon(painter = painterResource(id = R.mipmap.ic_launcher), contentDescription = "", modifier = Modifier.width(36.dp).height(36.dp).padding(start = 276.dp, end = 32.dp, top = 64.dp))
-            Text(
-                text = "$4000000,50",
-                fontSize = 36.sp,
-                modifier = Modifier.padding(start = 32.dp, top = 64.dp, end = 48.dp),
-                color = Color.White,
-                maxLines = 1
-            )
-            Text(
-                text = "$100 000 000,00 /час", modifier = Modifier
-                    .padding(start = 31.dp, top = 108.dp, end = 100.dp)
-                    .fillMaxWidth(), color = Color.Green, maxLines = 1
-            )
+        Box(modifier = Modifier.background(color = MaterialTheme.colors.background).weight(weight = weight).padding(top = 10.dp)) {
+                Image(
+                    painter = painterResource(id = R.drawable.card),
+                    "",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp),
+                    contentScale = ContentScale.FillWidth
+                )
+                //Icon(painter = painterResource(id = R.mipmap.ic_launcher), contentDescription = "", modifier = Modifier.width(36.dp).height(36.dp).padding(start = 276.dp, end = 32.dp, top = 64.dp))
+                Text(
+                    text = "$4000000,50",
+                    style = MaterialTheme.typography.h1,
+                    modifier = Modifier.padding(start = 32.dp, top = 34.dp, end = 48.dp),
+                    color = Color.White,
+                    maxLines = 1
+                )
+                Text(
+                    text = "$100 000 000,00 /час", modifier = Modifier
+                        .padding(start = 31.dp, top = 78.dp, end = 100.dp)
+                        .fillMaxWidth(),style = MaterialTheme.typography.subtitle1, color = MaterialTheme.colors.secondary, maxLines = 1
+                )
 
-        }
+            }
     }
 }
 
 
 @Composable
-fun BuisnessList() {
+fun ColumnScope.BuisnessList(weight: Float) {
     val buisnessRepository = BuisnessRepository()
     val getAllData = buisnessRepository.getAllData()
     Card(modifier = Modifier
-        .height(300.dp)
-        .padding(start = 16.dp, end = 16.dp, top = 2.dp, bottom = 2.dp), shape = Shapes.medium){
+       // .height(300.dp)
+        .weight(weight = weight)
+        .padding(start = 16.dp, end = 16.dp, top = 2.dp, bottom = 2.dp), shape = Shapes.medium, backgroundColor = MaterialTheme.colors.onBackground){
         Column() {
             Row(modifier = Modifier
                 .fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(text = "Статистика дохода",  fontSize = 20.sp, color = Color.Black, modifier = Modifier.padding(start = 20.dp, top = 16.dp))
-                Text(text = "все",  fontSize = 14.sp, color = Color.Blue, modifier = Modifier.padding(end = 20.dp, top = 22.dp))
+                Text(text = "Статистика дохода",  style = MaterialTheme.typography.h3 , color = MaterialTheme.colors.primary, modifier = Modifier.padding(start = 20.dp, top = 16.dp))
+                Text(text = "все",  style = MaterialTheme.typography.subtitle2, color = MaterialTheme.colors.surface, modifier = Modifier.padding(end = 20.dp, top = 22.dp))
             }
             LazyColumn(modifier = Modifier.padding(top = 2.dp),
                 contentPadding = PaddingValues(12.dp),
@@ -102,20 +107,25 @@ fun BuisnessList() {
 }
 
 @Composable
-fun ClickField() {
+fun ColumnScope.ClickField(weight: Float) {
     Card(modifier = Modifier
-        .height(140.dp)
+       // .height(140.dp)
+        .weight(weight = weight)
         .fillMaxWidth()
-        .padding(start = 16.dp, end = 16.dp, top = 2.dp, bottom = 2.dp), shape = Shapes.medium){
+        .padding(start = 16.dp, end = 16.dp, top = 2.dp, bottom = 2.dp), shape = Shapes.medium, backgroundColor = MaterialTheme.colors.onBackground){
         Row(horizontalArrangement = Arrangement.SpaceAround) {
             Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.SpaceAround) {
                 Button(onClick = {
                 },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Cyan), modifier = Modifier.height(40.dp).width(120.dp)) {
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.surface), modifier = Modifier
+                        .height(40.dp)
+                        .width(120.dp)) {
                     Text(text = "$50 000")
                 }
                 Button(onClick = {
-                }, modifier = Modifier.height(40.dp).width(120.dp)) {
+                }, colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.surface), modifier = Modifier
+                    .height(40.dp)
+                    .width(120.dp)) {
                     Text(text = "BOOST")
                     Image(
                         painterResource(id = R.drawable.arrow),
@@ -125,9 +135,9 @@ fun ClickField() {
 
             }
             Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
-               Text(text = "CLICK", fontSize = 32.sp, color = Color.Green)
-               Text(text = "HERE", fontSize = 20.sp, color = Color.Green)
-               Text(text = "$10,00", fontSize = 20.sp, color = Color.Green)
+               Text(text = "CLICK", style = MaterialTheme.typography.h2, color = MaterialTheme.colors.secondaryVariant)
+               Text(text = "HERE", style = MaterialTheme.typography.h3,  color = MaterialTheme.colors.secondaryVariant)
+               Text(text = "$10,00", style = MaterialTheme.typography.h3,  color = MaterialTheme.colors.secondaryVariant)
             }
 
         }
@@ -152,13 +162,13 @@ fun BuisnessItem(buisness: Buisness) {
                     .height(40.dp)
                     .padding(start = 8.dp), verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = buisness.name, fontSize = 16.sp, color = MaterialTheme.colors.primary)
-                Text(text = buisness.description, fontSize = 12.sp, color = MaterialTheme.colors.primary)
+                Text(text = buisness.name, style = MaterialTheme.typography.h4, color = MaterialTheme.colors.primary)
+                Text(text = buisness.description, style = MaterialTheme.typography.body2, color = MaterialTheme.colors.primary)
             }
         }
-        Row() {
-            Text(text = buisness.profit, fontSize = 14.sp, color = Color.Green)
-            Text(text = "/час", fontSize = 10.sp, color = Color.Gray)
+        Row(verticalAlignment = Alignment.Bottom) {
+            Text(text = buisness.profit, style = MaterialTheme.typography.subtitle1, color = MaterialTheme.colors.secondaryVariant)
+            Text(text = "/час", style = MaterialTheme.typography.caption, color = Color.Gray)
         }
         
     }
@@ -177,7 +187,7 @@ fun DefaultPreview() {
                     .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
             )
             {
-                CreditCard()
+                CreditCard(2f)
             }
         }
     }
