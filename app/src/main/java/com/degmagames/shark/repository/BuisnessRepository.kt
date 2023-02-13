@@ -36,6 +36,30 @@ class BuisnessRepository {
                 name = "TatNeft",
                 description = "АЗС",
                 profit = "$9872374"
+            ),
+            Buisness(
+                imageId = R.drawable.buisness_default_avatar,
+                name = "Noname",
+                description = "Noname",
+                profit = "$0"
+            ),
+            Buisness(
+                imageId = R.drawable.buisness_default_avatar,
+                name = "Noname",
+                description = "Noname",
+                profit = "$0"
+            ),
+            Buisness(
+                imageId = R.drawable.buisness_default_avatar,
+                name = "Noname",
+                description = "Noname",
+                profit = "$0"
+            ),
+            Buisness(
+                imageId = R.drawable.buisness_default_avatar,
+                name = "Noname",
+                description = "Noname",
+                profit = "$0"
             )
         )
     }
