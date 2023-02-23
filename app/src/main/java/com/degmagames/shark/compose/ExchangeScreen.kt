@@ -27,6 +27,7 @@ import com.degmagames.shark.ui.theme.Shapes
 import com.degmagames.shark.ui.theme.SharkTheme
 import com.degmagames.shark.R
 import com.degmagames.shark.utils.MainVariables
+import com.degmagames.shark.utils.moneyFormat
 
 
 @Composable
@@ -65,7 +66,7 @@ fun CreditCard(appNavController: NavHostController) {
                 .fillMaxWidth().padding(top = 24.dp, end = 16.dp, start = 16.dp)
                 , verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "$${MainVariables.money.value}",
+                    text = "$${MainVariables.money.value.toString().moneyFormat()}",
                     style = MaterialTheme.typography.h1,
                     modifier = Modifier.weight(7f),
                     color = Color.White,

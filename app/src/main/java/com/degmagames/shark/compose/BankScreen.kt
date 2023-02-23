@@ -30,6 +30,8 @@ import com.degmagames.shark.R
 import com.degmagames.shark.ui.theme.*
 import com.degmagames.shark.utils.MainVariables
 import com.degmagames.shark.utils.isValuePossible
+import com.degmagames.shark.utils.moneyFormat
+import kotlin.math.roundToInt
 
 @Composable
 fun BankScreen(appNavController: NavHostController) {
@@ -65,21 +67,21 @@ fun BankScreen(appNavController: NavHostController) {
     if(creditTerm.value.isValuePossible(MainVariables.termRange)&&creditMoney.value.isValuePossible(MainVariables.moneyRange)) {
             overpay = creditMoney.value.toInt() * percent.value/100
             commonSum = creditMoney.value.toInt() + overpay
-            payPerHour = (commonSum / (creditTerm.value.toInt() * 24)).toFloat()
+            payPerHour =  ((commonSum.toFloat() / (creditTerm.value.toFloat() * 24)) * 100.0).roundToInt() / 100.0.toFloat()
             creditDetails = listOf(
-                listOf("Срок кредита", "${creditTerm.value} дня"),
-                listOf("Сумма кредита", "$${creditMoney.value},00"),
-                listOf("Переплата", "$${overpay},00"),
-                listOf("Общая сумма", "$${commonSum},00"),
-                listOf("Платёж в час", "$${payPerHour},00")
+                listOf("Срок кредита:", "${creditTerm.value} дня"),
+                listOf("Сумма кредита:", "$${creditMoney.value.moneyFormat()}"),
+                listOf("Переплата:", "$${overpay.toString().moneyFormat()}"),
+                listOf("Общая сумма:", "$${commonSum.toString().moneyFormat()}"),
+                listOf("Платёж в час:", "$${payPerHour.toString().moneyFormat()}")
             )
         }
     else   creditDetails = listOf(
-        listOf("Срок кредита" , "?"),
-        listOf("Сумма кредита" ,    "?"),
-        listOf("Переплата" , "?"),
-        listOf("Общая сумма"  , "?"),
-        listOf("Платёж в час" ,  "?")
+        listOf("Срок кредита:" , "?"),
+        listOf("Сумма кредита:" ,    "?"),
+        listOf("Переплата:" , "?"),
+        listOf("Общая сумма:"  , "?"),
+        listOf("Платёж в час:" ,  "?")
     )
     val buttonText = remember {
         mutableStateOf("Минимальный уровень дохода ${MainVariables.minimum}")
@@ -380,7 +382,6 @@ fun ParameterItem(
                         localParameterText.value = newValue
                         if(newValue.isValuePossible(range))
                         {
-
                             parameterText.value = newValue
                             textColor = colorText
                         }
