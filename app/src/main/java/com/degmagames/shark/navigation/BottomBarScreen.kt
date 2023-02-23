@@ -1,10 +1,6 @@
-package com.degmagames.shark
+package com.degmagames.shark.navigation
 
-import android.media.Image
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
+import com.degmagames.shark.R
 
 sealed class BottomBarScreen(
     val route: String,

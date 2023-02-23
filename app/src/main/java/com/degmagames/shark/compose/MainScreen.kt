@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -15,16 +17,16 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.degmagames.shark.BottomBarScreen
 import com.degmagames.shark.BottomNavGraph
-import com.degmagames.shark.ui.theme.*
+import com.degmagames.shark.navigation.BottomBarScreen
+import com.degmagames.shark.ui.theme.Shapes
+import com.degmagames.shark.ui.theme.SharkTheme
+import com.degmagames.shark.utils.MainVariables
 
 @Composable
-fun MainScreen() {
+fun MainScreen(appNavController: NavHostController) {
     val navController = rememberNavController()
-    val pressedItem = remember {
-        mutableStateOf(2)
-    }
+    val pressedItem = MainVariables.pressedItem
     val screens = remember {
         listOf(
             BottomBarScreen.invest,
@@ -37,10 +39,10 @@ fun MainScreen() {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    SharkTheme() {
+    SharkTheme {
         Column(verticalArrangement = Arrangement.SpaceBetween) {
             Box(modifier = Modifier.weight(5f)) {
-                BottomNavGraph(navController = navController)
+                BottomNavGraph(bottomNavController = navController, appNavController = appNavController)
             }
             Card(
                 shape = Shapes.medium,
@@ -54,11 +56,11 @@ fun MainScreen() {
                     horizontalArrangement = Arrangement.SpaceAround,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    BottomIcon(0, pressedItem, screens,navController)
-                    BottomIcon(1, pressedItem, screens,navController)
-                    BottomIcon(2, pressedItem, screens,navController)
-                    BottomIcon(3, pressedItem, screens,navController)
-                    BottomIcon(4, pressedItem, screens,navController)
+                    BottomIcon(0, pressedItem, screens, navController)
+                    BottomIcon(1, pressedItem, screens, navController)
+                    BottomIcon(2, pressedItem, screens, navController)
+                    BottomIcon(3, pressedItem, screens, navController)
+                    BottomIcon(4, pressedItem, screens, navController)
                 }
 
             }
@@ -69,20 +71,30 @@ fun MainScreen() {
 }
 
 @Composable
-fun RowScope.BottomIcon(itemId: Int, pressedItem: MutableState<Int>, screens: List<BottomBarScreen>, navHostController: NavHostController) {
-    val iconId = if (pressedItem.value != itemId)
-        when (MaterialTheme.colors.onBackground) {
-            Dark -> screens[itemId].icon_static_dark
-            else -> screens[itemId].icon_static
-        }
-    else {
+fun RowScope.BottomIcon(
+    itemId: Int,
+    pressedItem: MutableState<Int>,
+    screens: List<BottomBarScreen>,
+    navHostController: NavHostController
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val iconId = if (pressedItem.value != itemId) {
+        if (isSystemInDarkTheme()) screens[itemId].icon_static_dark
+        else screens[itemId].icon_static
+    } else {
         Log.i("BottomBarScreen.bottomItemsList", "${screens[itemId]}")
         screens[itemId].icon_active
     }
-    Column(modifier = Modifier.fillMaxHeight().weight(1f).clickable {
-        pressedItem.value = itemId
-        navHostController.navigate(screens[itemId].route)
-    }, verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally)
+    Column(modifier = Modifier
+        .fillMaxHeight()
+        .weight(1f)
+        .clickable(
+            interactionSource = interactionSource,
+            indication = null
+        ) {
+            pressedItem.value = itemId
+            navHostController.navigate(screens[itemId].route)
+        }, verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally)
     {
         Image(
             painter = painterResource(id = iconId),

@@ -8,13 +8,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import com.degmagames.shark.R
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,21 +19,25 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.degmagames.shark.model.Buisness
 import com.degmagames.shark.repository.BuisnessRepository
 import com.degmagames.shark.ui.theme.Shapes
 import com.degmagames.shark.ui.theme.SharkTheme
+import com.degmagames.shark.R
+import com.degmagames.shark.utils.MainVariables
 
 
 @Composable
-fun ExchangeScreen() {
+fun ExchangeScreen(appNavController: NavHostController) {
     //Text(text = "ExchangeScreen")
     SharkTheme {
         Column(modifier = Modifier
             .fillMaxHeight()
             .background(MaterialTheme.colors.background)
             .padding(top = 40.dp, start = 16.dp, end = 16.dp, bottom = 16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            CreditCard()
+            CreditCard(appNavController)
             Column(verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxHeight()) {
                 BuisnessList(3f)
                 ClickField()
@@ -47,9 +48,8 @@ fun ExchangeScreen() {
     }
 }
 
-@Preview
 @Composable
-fun CreditCard() {
+fun CreditCard(appNavController: NavHostController) {
     SharkTheme {
         Box(modifier = Modifier
             .background(color = MaterialTheme.colors.background)) {
@@ -65,7 +65,7 @@ fun CreditCard() {
                 .fillMaxWidth().padding(top = 24.dp, end = 16.dp, start = 16.dp)
                 , verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "$40 00000,50",
+                    text = "$${MainVariables.money.value}",
                     style = MaterialTheme.typography.h1,
                     modifier = Modifier.weight(7f),
                     color = Color.White,
@@ -73,7 +73,7 @@ fun CreditCard() {
                 )
                 Image(painter = painterResource(id = R.drawable.plus_card), contentDescription = "plus", modifier = Modifier
                     .height(36.dp)
-                    .weight(1f))
+                    .weight(1f).clickable { appNavController.navigate("bank") })
             }
 
             Text(
@@ -94,7 +94,7 @@ fun ColumnScope.BuisnessList(weight: Float) {
     Card(modifier = Modifier
         // .height(300.dp)
         .weight(weight = weight)
-        .padding(bottom = 16.dp), shape = Shapes.medium, backgroundColor = MaterialTheme.colors.onBackground){
+        .padding(bottom = 16.dp), shape = Shapes.large, backgroundColor = MaterialTheme.colors.onBackground){
         Column() {
             Row(modifier = Modifier
                 .fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween) {
@@ -118,7 +118,7 @@ fun ClickField() {
     Card(modifier = Modifier
         .height(140.dp)
         //.weight(weight = weight)
-        .fillMaxWidth(), shape = Shapes.medium, backgroundColor = MaterialTheme.colors.onBackground){
+        .fillMaxWidth(), shape = Shapes.large, backgroundColor = MaterialTheme.colors.onBackground){
         Row() {
             Column(modifier = Modifier
                 .fillMaxHeight()
@@ -128,15 +128,14 @@ fun ClickField() {
                 },
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.surface), modifier = Modifier
                         .height(40.dp)
-                        .width(120.dp)
-                        .padding(start = 20.dp)) {
+                        .width(120.dp)) {
                     Text(text = "$50 000", color = Color.White)
                 }
                 Button(onClick = {
                 }, colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.surface), modifier = Modifier
                     .height(40.dp)
                     .width(120.dp)
-                    .padding(start = 20.dp)) {
+                    ) {
                     Text(text = "BOOST", color = Color.White)
                     Image(
                         painterResource(id = R.drawable.arrow),
@@ -148,7 +147,7 @@ fun ClickField() {
             Column(modifier = Modifier
                 .fillMaxSize()
                 .clickable(true, "", null) {
-                    //TODO прибавить к счёту
+                    MainVariables.money.value += 10
                 }
                 .weight(1f), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                 Text(text = "CLICK", style = MaterialTheme.typography.h2, color = MaterialTheme.colors.secondaryVariant)
@@ -190,22 +189,4 @@ fun BuisnessItem(buisness: Buisness) {
 
     }
 
-}
-
-//.absoluteOffset(x = 10.dp, y = 20.dp)
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    SharkTheme {
-        Column(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
-            )
-            {
-                CreditCard()
-            }
-        }
-    }
 }
