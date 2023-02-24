@@ -38,7 +38,10 @@ fun MainScreen(appNavController: NavHostController) {
     }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
+    //val currentDestination = navBackStackEntry?.destination
+    var currentScreen = remember {
+        mutableStateOf(0)
+    }
     SharkTheme {
         Column(verticalArrangement = Arrangement.SpaceBetween) {
             Box(modifier = Modifier.weight(5f)) {
@@ -56,11 +59,11 @@ fun MainScreen(appNavController: NavHostController) {
                     horizontalArrangement = Arrangement.SpaceAround,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    BottomIcon(0, pressedItem, screens, navController)
-                    BottomIcon(1, pressedItem, screens, navController)
-                    BottomIcon(2, pressedItem, screens, navController)
-                    BottomIcon(3, pressedItem, screens, navController)
-                    BottomIcon(4, pressedItem, screens, navController)
+                    BottomIcon(0, pressedItem, screens, navController,currentScreen)
+                    BottomIcon(1, pressedItem, screens, navController,currentScreen)
+                    BottomIcon(2, pressedItem, screens, navController,currentScreen)
+                    BottomIcon(3, pressedItem, screens, navController,currentScreen)
+                    BottomIcon(4, pressedItem, screens, navController,currentScreen)
                 }
 
             }
@@ -75,7 +78,7 @@ fun RowScope.BottomIcon(
     itemId: Int,
     pressedItem: MutableState<Int>,
     screens: List<BottomBarScreen>,
-    navHostController: NavHostController
+    navHostController: NavHostController, currentScreen: MutableState<Int>
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val iconId = if (pressedItem.value != itemId) {
@@ -92,8 +95,13 @@ fun RowScope.BottomIcon(
             interactionSource = interactionSource,
             indication = null
         ) {
-            pressedItem.value = itemId
-            navHostController.navigate(screens[itemId].route)
+            if (itemId!=currentScreen.value)
+            {
+                currentScreen.value = itemId
+                pressedItem.value = itemId
+                navHostController.navigate(screens[itemId].route)
+            }
+
         }, verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally)
     {
         Image(
