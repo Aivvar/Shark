@@ -4,6 +4,7 @@
 
 package com.degmagames.shark.compose
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,28 +17,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.degmagames.shark.R
 import com.degmagames.shark.model.Buisness
 import com.degmagames.shark.repository.BuisnessRepository
 import com.degmagames.shark.ui.theme.Shapes
 import com.degmagames.shark.ui.theme.SharkTheme
-import com.degmagames.shark.R
 import com.degmagames.shark.utils.MainVariables
 import com.degmagames.shark.utils.moneyFormat
+import java.util.*
 
 
 @Composable
 fun ExchangeScreen(appNavController: NavHostController) {
     //Text(text = "ExchangeScreen")
+    var lastCreditPercentSet = Date().time.inc()
+    Log.i("Time", lastCreditPercentSet.toString())
     SharkTheme {
         Column(modifier = Modifier
             .fillMaxHeight()
             .background(MaterialTheme.colors.background)
-            .padding(top = 40.dp, start = 16.dp, end = 16.dp, bottom = 16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            .padding(top = 4.dp, start = 16.dp, end = 16.dp, bottom = 16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             CreditCard(appNavController)
             Column(verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxHeight()) {
                 BuisnessList(3f)
@@ -66,7 +70,7 @@ fun CreditCard(appNavController: NavHostController) {
                 .fillMaxWidth().padding(top = 24.dp, end = 16.dp, start = 16.dp)
                 , verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "$${MainVariables.money.value.toString().moneyFormat()}",
+                    text = MainVariables.money.value.toString().moneyFormat(),
                     style = MaterialTheme.typography.h1,
                     modifier = Modifier.weight(7f),
                     color = Color.White,
@@ -116,6 +120,7 @@ fun ColumnScope.BuisnessList(weight: Float) {
 @Preview
 @Composable
 fun ClickField() {
+    val context = LocalContext.current
     Card(modifier = Modifier
         .height(140.dp)
         //.weight(weight = weight)
@@ -148,7 +153,7 @@ fun ClickField() {
             Column(modifier = Modifier
                 .fillMaxSize()
                 .clickable(true, "", null) {
-                    MainVariables.money.value += 10
+                    MainVariables.moneyAddition(MainVariables.moneyPerClick.value, context)
                 }
                 .weight(1f), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                 Text(text = "CLICK", style = MaterialTheme.typography.h2, color = MaterialTheme.colors.secondaryVariant)
@@ -184,7 +189,7 @@ fun BuisnessItem(buisness: Buisness) {
             }
         }
         Row(verticalAlignment = Alignment.Bottom) {
-            Text(text = buisness.profit, style = MaterialTheme.typography.subtitle1, color = MaterialTheme.colors.secondaryVariant)
+            Text(text = buisness.profit.toString().moneyFormat(), style = MaterialTheme.typography.subtitle1, color = MaterialTheme.colors.secondaryVariant)
             Text(text = "/час", style = MaterialTheme.typography.caption, color = Color.Gray)
         }
 

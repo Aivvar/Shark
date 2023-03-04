@@ -40,12 +40,15 @@ fun MainScreen(appNavController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     //val currentDestination = navBackStackEntry?.destination
     var currentScreen = remember {
-        mutableStateOf(0)
+        mutableStateOf(2)
     }
     SharkTheme {
         Column(verticalArrangement = Arrangement.SpaceBetween) {
             Box(modifier = Modifier.weight(5f)) {
-                BottomNavGraph(bottomNavController = navController, appNavController = appNavController)
+                BottomNavGraph(
+                    bottomNavController = navController,
+                    appNavController = appNavController
+                )
             }
             Card(
                 shape = Shapes.medium,
@@ -59,11 +62,11 @@ fun MainScreen(appNavController: NavHostController) {
                     horizontalArrangement = Arrangement.SpaceAround,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    BottomIcon(0, pressedItem, screens, navController,currentScreen)
-                    BottomIcon(1, pressedItem, screens, navController,currentScreen)
-                    BottomIcon(2, pressedItem, screens, navController,currentScreen)
-                    BottomIcon(3, pressedItem, screens, navController,currentScreen)
-                    BottomIcon(4, pressedItem, screens, navController,currentScreen)
+                    BottomIcon(0, pressedItem, screens, navController, currentScreen)
+                    BottomIcon(1, pressedItem, screens, navController, currentScreen)
+                    BottomIcon(2, pressedItem, screens, navController, currentScreen)
+                    BottomIcon(3, pressedItem, screens, navController, currentScreen)
+                    BottomIcon(4, pressedItem, screens, navController, currentScreen)
                 }
 
             }
@@ -95,14 +98,16 @@ fun RowScope.BottomIcon(
             interactionSource = interactionSource,
             indication = null
         ) {
-            if (itemId!=currentScreen.value)
-            {
+            if (itemId != currentScreen.value) {
                 currentScreen.value = itemId
                 pressedItem.value = itemId
                 navHostController.navigate(screens[itemId].route)
             }
 
-        }, verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally)
+        },
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    )
     {
         Image(
             painter = painterResource(id = iconId),

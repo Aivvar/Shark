@@ -70,10 +70,10 @@ fun BankScreen(appNavController: NavHostController) {
             payPerHour =  ((commonSum.toFloat() / (creditTerm.value.toFloat() * 24)) * 100.0).roundToInt() / 100.0.toFloat()
             creditDetails = listOf(
                 listOf("Срок кредита:", "${creditTerm.value} дня"),
-                listOf("Сумма кредита:", "$${creditMoney.value.moneyFormat()}"),
-                listOf("Переплата:", "$${overpay.toString().moneyFormat()}"),
-                listOf("Общая сумма:", "$${commonSum.toString().moneyFormat()}"),
-                listOf("Платёж в час:", "$${payPerHour.toString().moneyFormat()}")
+                listOf("Сумма кредита:", creditMoney.value.moneyFormat()),
+                listOf("Переплата:", overpay.toString().moneyFormat()),
+                listOf("Общая сумма:", commonSum.toString().moneyFormat()),
+                listOf("Платёж в час:", payPerHour.toString().moneyFormat())
             )
         }
     else   creditDetails = listOf(
@@ -135,9 +135,7 @@ fun BankScreen(appNavController: NavHostController) {
                             textAlign = TextAlign.Center
                         )
                     }
-
                 }
-
             }
 
         }
@@ -379,17 +377,16 @@ fun ParameterItem(
                 BasicTextField(
                     value = localParameterText.value,
                     onValueChange = { newValue ->
-                        localParameterText.value = newValue
-                        if(newValue.isValuePossible(range))
-                        {
-                            parameterText.value = newValue
-                            textColor = colorText
+                        if(newValue.length<20) {
+                            localParameterText.value = newValue
+                            if (newValue.isValuePossible(range)) {
+                                parameterText.value = newValue
+                                textColor = colorText
+                            } else {
+                                parameterText.value = "?"
+                                textColor = Color.Red
+                            }
                         }
-                        else {
-                            parameterText.value = "?"
-                            textColor = Color.Red
-                        }
-
                     },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
